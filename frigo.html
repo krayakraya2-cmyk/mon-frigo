@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Frigo</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Styles spécifiques au frigo cliquable */
+  .fridge-visual {
+    background: linear-gradient(180deg, #f0f4f8 0%, #e0e8f0 100%);
+    border: 8px solid #c3b4e0;
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: inset 0 0 20px rgba(180,160,200,0.15), var(--ombre);
+    position: relative;
+  }
+  .fridge-visual::before {
+    content: "";
+    position: absolute;
+    top: 15px; left: 50%;
+    transform: translateX(-50%);
+    width: 40px; height: 6px;
+    background: #c3b4e0;
+    border-radius: 3px;
+  }
+  .fridge-shelf {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 14px;
+    margin-top: 12px;
+    min-height: 60px;
+    align-items: center;
+    border-bottom: 3px solid #d4c8e8;
+  }
+  .fridge-shelf-label {
+    font-size: 0.75rem;
+    color: var(--texte-doux);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  .fridge-product {
+    background: var(--blanc);
+    border: 2px solid var(--menthe);
+    border-radius: 14px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--texte);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(180,160,180,0.1);
+  }
+  .fridge-product:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 14px rgba(180,160,180,0.25);
+    border-color: var(--menthe-fonce);
+  }
+  .fridge-product.expiring { border-color: var(--peche-fonce); background: var(--jaune); }
+  .fridge-product.expired { border-color: #e8a7ae; background: #fce4e4; opacity: 0.7; text-decoration: line-through; }
+  .fridge-product.selected { background: var(--menthe); border-color: var(--menthe-fonce); transform: scale(1.05); }
+  .fridge-product .days {
+    font-size: 0.7rem;
+    background: var(--lavande);
+    padding: 2px 8px;
+    border-radius: 10px;
+    color: var(--texte);
+  }
+  .fridge-product .del-x {
+    background: #fce4e4;
+    color: #b0566a;
+    border: none;
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    margin-left: 4px;
+  }
+  .fridge-product .del-x:hover { background: #f8d0d0; }
+
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.85rem; color: var(--texte-doux); }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .legend .dot { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+  .dot.ok { background: var(--menthe); }
+  .dot.warn { background: var(--peche); }
+  .dot.bad { background: var(--rose); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mon Frigo Pastel</h1>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="frigo.html" class="active">Frigo</a>
+    <a href="recettes.html">Recettes</a>
+    <a href="courses.html">Courses</a>
+    <a href="apropos.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="container">
+  <h2>🧊 Mon Frigo</h2>
+  <p class="hint">Cliquez sur un produit pour le sélectionner et voir les recettes possibles. Cliquez sur le petit ✕ pour supprimer.</p>
+
+  <div class="legend">
+    <span><span class="dot ok"></span> Bon</span>
+    <span><span class="dot warn"></span> Bientôt périmé</span>
+    <span><span class="dot bad"></span> Périmé</span>
+  </div>
+
+  <!-- Visuel du frigo avec produits cliquables -->
+  <div class="fridge-visual">
+    <div class="fridge-shelf">
+      <div class="fridge-shelf-label">🥬 Étagère du haut</div>
+      <div id="shelfTop" style="display:flex;flex-wrap:wrap;gap:10px;width:100%;"></div>
+    </div>
+    <div class="fridge-shelf">
+      <div class="fridge-shelf-label">🧀 Étagère du milieu</div>
+      <div id="shelfMid" style="display:flex;flex-wrap:wrap;gap:10px;width:100%;"></div>
+    </div>
+    <div class="fridge-shelf">
+      <div class="fridge-shelf-label">🥕 Bac à légumes</div>
+      <div id="shelfBottom" style="display:flex;flex-wrap:wrap;gap:10px;width:100%;"></div>
+    </div>
+    <p id="fridgeEmpty" class="empty" style="background:transparent;margin-top:10px;display:none;">Le frigo est vide 🌸</p>
+  </div>
+
+  <!-- Ajout d'ingrédient -->
+  <h3 style="margin:20px 0 10px;color:var(--texte);font-size:1.05rem;">➕ Ajouter un ingrédient</h3>
+  <div class="add-row">
+    <input type="text" id="ingInput" placeholder="Ex: tomate, œuf, semoule..." autocomplete="off">
+    <select id="expirySelect">
+      <option value="3">+3 jours</option>
+      <option value="7" selected>+7 jours</option>
+      <option value="14">+14 jours</option>
+      <option value="30">+30 jours</option>
+    </select>
+    <button class="btn-primary" id="addBtn">Ajouter</button>
+  </div>
+
+  <!-- Suggestions rapides -->
+  <div class="choice-grid" id="quickAdd"></div>
+
+  <!-- Tableau récap -->
+  <h3 style="margin:24px 0 10px;color:var(--texte);font-size:1.05rem;">📋 Inventaire complet</h3>
+  <table class="data-table">
+    <thead>
+      <tr><th>Ingrédient</th><th>Ajouté le</th><th>Jours restants</th><th>État</th><th>Action</th></tr>
+    </thead>
+    <tbody id="fridgeBody"></tbody>
+  </table>
+  <p id="emptyMsg" class="empty">Votre frigo est vide. Ajoutez un aliment ci-dessus 🌸</p>
+</main>
+
+<footer>© 2025 Mon Frigo Pastel</footer>
+
+<script>
+const QUICK = ["Tomate", "Oignon", "Ail", "Œuf", "Semoule", "Pois chiches", "Harissa", "Huile d'olive", "Carotte", "Courgette", "Poivron", "Persil", "Coriandre", "Poulet", "Agneau", "Thon", "Fromage", "Pomme de terre", "Pain", "Riz"];
+
+let fridge = JSON.parse(localStorage.getItem('fm_fridge') || '[]');
+let selected = new Set(JSON.parse(localStorage.getItem('fm_selected') || '[]'));
+
+const $ = id => document.getElementById(id);
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+
+function save() {
+  localStorage.setItem('fm_fridge', JSON.stringify(fridge));
+  localStorage.setItem('fm_selected', JSON.stringify([...selected]));
+}
+
+function addIngredient(name, days = 7) {
+  const raw = (name || '').trim();
+  if (!raw) return;
+  const key = norm(raw);
+  if (fridge.some(f => f.key === key)) return;
+  fridge.push({ key, name: raw, added: Date.now(), expiry: Date.now() + days * 86400000 });
+  selected.add(key);
+  save(); render();
+}
+
+function removeItem(key) {
+  fridge = fridge.filter(f => f.key !== key);
+  selected.delete(key);
+  save(); render();
+}
+
+function toggleSelect(key) {
+  if (selected.has(key)) selected.delete(key);
+  else selected.add(key);
+  save(); render();
+}
+
+function statusOf(f) {
+  const d = Math.ceil((f.expiry - Date.now()) / 86400000);
+  if (d < 0) return { label: '❌ Périmé', cls: 'expired', days: d };
+  if (d <= 2) return { label: '⚠️ Bientôt', cls: 'expiring', days: d };
+  return { label: '✅ Bon', cls: '', days: d };
+}
+
+function productHTML(f) {
+  const st = statusOf(f);
+  const sel = selected.has(f.key) ? 'selected' : '';
+  const daysTxt = st.days < 0 ? 'périmé' : st.days + 'j';
+  return `<div class="fridge-product ${st.cls} ${sel}" data-key="${f.key}" onclick="toggleSelect('${f.key}')">
+    <span>${f.name}</span>
+    <span class="days">${daysTxt}</span>
+    <button class="del-x" onclick="event.stopPropagation();removeItem('${f.key}')" title="Supprimer">✕</button>
+  </div>`;
+}
+
+function render() {
+  // Répartir les produits sur 3 étagères
+  const shelves = [[], [], []];
+  fridge.forEach((f, i) => shelves[i % 3].push(f));
+  $('shelfTop').innerHTML = shelves[0].map(productHTML).join('');
+  $('shelfMid').innerHTML = shelves[1].map(productHTML).join('');
+  $('shelfBottom').innerHTML = shelves[2].map(productHTML).join('');
+  $('fridgeEmpty').style.display = fridge.length ? 'none' : 'block';
+
+  // Tableau
+  const tbody = $('fridgeBody'), empty = $('emptyMsg');
+  if (!fridge.length) { tbody.innerHTML = ''; empty.style.display = 'block'; }
+  else {
+    empty.style.display = 'none';
+    tbody.innerHTML = fridge.map(f => {
+      const st = statusOf(f);
+      let cls = '';
+      if (st.cls === 'expired') cls = 'bad';
+      else if (st.cls === 'expiring') cls = 'warn';
+      return `<tr class="${cls}">
+        <td>${f.name}</td>
+        <td>${new Date(f.added).toLocaleDateString('fr-FR')}</td>
+        <td>${st.days < 0 ? '—' : st.days}</td>
+        <td>${st.label}</td>
+        <td><button class="del" onclick="removeItem('${f.key}')">Supprimer</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Suggestions rapides
+  $('quickAdd').innerHTML = QUICK.map(q => {
+    const inFridge = fridge.some(f => f.key === norm(q));
+    return `<button class="choice-btn ${inFridge ? 'selected' : ''}" ${inFridge ? 'disabled' : ''} onclick="addIngredient('${q}')">${inFridge ? '✓ ' : '+ '}${q}</button>`;
+  }).join('');
+}
+
+$('addBtn').onclick = () => {
+  const raw = $('ingInput').value.trim();
+  if (!raw) return;
+  addIngredient(raw, parseInt($('expirySelect').value));
+  $('ingInput').value = '';
+};
+$('ingInput').onkeypress = e => { if (e.key === 'Enter') $('addBtn').click(); };
+
+render();
+</script>
+</body>
+</html>

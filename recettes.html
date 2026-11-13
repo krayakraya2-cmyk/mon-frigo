@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recettes tunisiennes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Mon Frigo Pastel</h1>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="frigo.html">Frigo</a>
+    <a href="recettes.html" class="active">Recettes</a>
+    <a href="courses.html">Courses</a>
+    <a href="apropos.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+<main class="container">
+  <h2>🍲 Recettes tunisiennes</h2>
+  <p class="hint">Cliquez sur une recette pour voir les ingrédients et la préparation complète.</p>
+  <div class="selection-info" id="selectionInfo"></div>
+  <div id="recipesList" class="recipes"></div>
+</main>
+<footer>© 2025 Mon Frigo Pastel</footer>
+<script>
+const RECIPES = [
+  { id: 'couscous', name: "Couscous tunisien", img: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=800", ingredients: ["semoule", "agneau", "carotte", "courgette", "pois chiches", "tomate", "harissa"], time: "1h30", desc: "Le plat national tunisien, avec légumes, viande et sauce piquante." },
+  { id: 'lablabi', name: "Lablabi", img: "images/lablabi.jpg", ingredients: ["pois chiches", "pain", "ail", "cumin", "harissa", "huile", "oeuf"], time: "30 min", desc: "Soupe de pois chiches épicée, servie sur du pain rassis avec œuf et thon." },
+  { id: 'brik', name: "Brik à l'œuf", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800", ingredients: ["feuille de brick", "oeuf", "thon", "persil", "pomme de terre"], time: "20 min", desc: "Fine feuille croustillante garnie d'œuf, thon et persil." },
+  { id: 'tajine', name: "Tajine tunisien", img: "images/tajine.jpg", ingredients: ["oeuf", "poulet", "fromage", "pomme de terre", "persil", "oignon"], time: "45 min", desc: "Gâteau salé à base d'œufs, viande et fromage, cuit au four." },
+  { id: 'chorba', name: "Chorba", img: "images/chorba.jpg", ingredients: ["frik", "agneau", "tomate", "oignon", "coriandre", "harissa"], time: "1h", desc: "Soupe traditionnelle au blé vert concassé, parfaite pour le Ramadan." },
+  { id: 'makroudh', name: "Makroudh de Kairouan", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Makrouds_Kairouan.jpg/800px-Makrouds_Kairouan.jpg", ingredients: ["semoule", "datte", "miel", "huile", "cannelle"], time: "1h", desc: "Pâtisserie traditionnelle en forme de losange, fourrée aux dattes." },
+  { id: 'mloukhia', name: "Mloukhia", img: "images/mloukhia.jpg", ingredients: ["mloukhia", "agneau", "ail", "coriandre", "huile"], time: "2h", desc: "Ragoût vert traditionnel à base de corète potagère et viande." },
+  { id: 'slata-mechouia', name: "Slata Mechouia", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", ingredients: ["poivron", "tomate", "oignon", "ail", "thon", "oeuf"], time: "30 min", desc: "Salade de légumes grillés, servie avec thon et œuf dur." },
+  { id: 'ojja', name: "Ojja merguez", img: "images/ojja.jpg", ingredients: ["oeuf", "tomate", "merguez", "poivron", "ail", "harissa"], time: "25 min", desc: "Œufs pochés dans une sauce tomate épicée avec merguez." },
+  { id: 'kamounia', name: "Kamounia", img: "images/chorba.jpg", ingredients: ["foie", "boeuf", "cumin", "ail", "tomate", "harissa", "coriandre"], time: "1h", desc: "Ragoût de foie et de bœuf parfumé au cumin, un classique réconfortant." },
+  { id: 'marqa-hlowa', name: "Marqa Hlowa", img: "https://images.unsplash.com/photo-1574484284002-952d92456975?w=800", ingredients: ["agneau", "pruneaux", "amandes", "miel", "cannelle", "oignon"], time: "1h15", desc: "Ragoût sucré-salé aux pruneaux et amandes." },
+  { id: 'chapati', name: "Chapati tunisien", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800", ingredients: ["farine", "huile", "oeuf", "thon", "harissa", "pomme de terre"], time: "30 min", desc: "Galette frite garnie de thon, œuf et harissa." },
+  { id: 'mhamsa', name: "Mhamsa", img: "images/mhamsa.jpg", ingredients: ["mhamsa", "agneau", "pois chiches", "tomate", "harissa", "oignon"], time: "1h", desc: "Ragoût de grosses pâtes en perles avec viande et pois chiches." },
+  { id: 'salade-tunisienne', name: "Salade tunisienne", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", ingredients: ["tomate", "concombre", "oignon", "thon", "olive", "citron"], time: "15 min", desc: "Salade fraîche et croquante, incontournable des tables tunisiennes." },
+  { id: 'chakchouka', name: "Chakchouka", img: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800", ingredients: ["poivron", "tomate", "oignon", "oeuf", "harissa", "ail"], time: "30 min", desc: "Légumes mijotés avec œufs." }
+];
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+function getSelectedKeys() { const sel = JSON.parse(localStorage.getItem('fm_selected') || '[]'); if (sel.length) return sel; const fridge = JSON.parse(localStorage.getItem('fm_fridge') || '[]'); return fridge.map(f => f.key); }
+function addToShopping(items) { let shop = JSON.parse(localStorage.getItem('fm_shop') || '[]'); let added = 0; items.forEach(item => { if (!shop.some(s => norm(s.name) === norm(item))) { shop.push({ name: item, done: false }); added++; } }); localStorage.setItem('fm_shop', JSON.stringify(shop)); return added; }
+function render() {
+  const keys = getSelectedKeys(); const info = document.getElementById('selectionInfo'); const list = document.getElementById('recipesList');
+  if (!keys.length) { info.innerHTML = `Aucun produit sélectionné. Allez sur <a href="frigo.html">Mon Frigo</a> et cliquez sur vos produits.`; list.innerHTML = '<p class="empty">Sélectionnez des produits dans votre frigo pour voir les recettes 🌸</p>'; return; }
+  info.innerHTML = `<strong>${keys.length} produit(s) sélectionné(s)</strong> dans votre frigo. <a href="frigo.html">Modifier ma sélection</a>`;
+  const scored = RECIPES.map(r => { const have = r.ingredients.filter(i => keys.includes(norm(i))); const missing = r.ingredients.filter(i => !keys.includes(norm(i))); return { ...r, have, missing, count: have.length }; }).filter(r => r.count > 0).sort((a, b) => b.count - a.count || a.missing.length - b.missing.length);
+  if (!scored.length) { list.innerHTML = '<p class="empty">Aucune recette ne correspond à votre sélection.</p>'; return; }
+  list.innerHTML = scored.map(r => {
+    const full = r.missing.length === 0; const badge = full ? `<span class="badge ok">✓ Prêt à cuisiner</span>` : `<span class="badge warn">${r.count}/${r.ingredients.length}</span>`;
+    const missingJson = JSON.stringify(r.missing).replace(/'/g, "&#39;");
+    const addBtn = r.missing.length ? `<button class="btn-secondary" onclick='handleAddMissing(${missingJson}); event.stopPropagation();'>+ Ajouter les manquants</button>` : `<span class="badge ok" style="padding:9px 16px;">🎉 Vous avez tout !</span>`;
+    return `<div class="recipe-card" style="cursor:pointer;" onclick="window.location.href='recette-detail.html?id=${r.id}'">
+      <div class="img-wrap"><img src="${r.img}" alt="${r.name}" onerror="this.src='https://images.unsplash.com/photo-1547592180-85f173990554?w=800'"></div>
+      <div class="recipe-body">
+        <h3>${r.name} ${badge}</h3><p class="meta">⏱ ${r.time}</p><p>${r.desc}</p>
+        <p><strong>Vous avez :</strong> ${r.have.join(', ')}</p>
+        ${r.missing.length ? `<p class="missing"><strong>Il manque :</strong> ${r.missing.join(', ')}</p>` : ''}
+        <div class="recipe-actions"><span class="details">Voir la recette complète →</span>${addBtn}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.handleAddMissing = function(items) { const n = addToShopping(items); alert(n + ' ingrédient(s) ajouté(s) à la liste de courses 🛒'); };
+render(); window.addEventListener('focus', render);
+</script>
+</body>
+</html>

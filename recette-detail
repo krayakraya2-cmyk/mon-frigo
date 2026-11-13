@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Détail de la recette</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .detail-hero { border-radius: var(--rayon-lg); overflow: hidden; box-shadow: var(--ombre); margin-bottom: 24px; }
+  .detail-hero img { width: 100%; height: 350px; object-fit: cover; display: block; }
+  .detail-content { background: var(--blanc); border-radius: var(--rayon-lg); padding: 36px; box-shadow: var(--ombre); border: 1px solid rgba(238, 170, 179, 0.15); }
+  .detail-content h1 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--texte); margin-bottom: 12px; letter-spacing: -0.5px; }
+  .detail-meta { color: var(--texte-doux); font-size: 0.95rem; margin-bottom: 28px; display: flex; gap: 22px; flex-wrap: wrap; font-weight: 600; }
+  .detail-content h4 { font-family: 'Playfair Display', serif; color: var(--texte); font-size: 1.25rem; margin: 28px 0 14px; font-weight: 700; }
+  .detail-content ol { padding-left: 24px; color: var(--texte-doux); }
+  .detail-content ol li { margin-bottom: 10px; line-height: 1.7; font-weight: 500; }
+  .detail-content ul { background: linear-gradient(135deg, var(--menthe-pale), var(--lavande-pale)); padding: 18px 18px 18px 40px; border-radius: var(--rayon); list-style: none; color: var(--texte-doux); font-weight: 500; }
+  .detail-content ul li { margin-bottom: 8px; line-height: 1.6; position: relative; }
+  .detail-content ul li::before { content: "🌸"; position: absolute; left: -24px; font-size: 0.85rem; }
+  .detail-actions { margin-top: 32px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .detail-actions a { text-decoration: none; display: inline-block; }
+  .back-link { display: inline-block; color: var(--lavande-deep); text-decoration: none; font-weight: 700; margin-bottom: 22px; transition: var(--transition); }
+  .back-link:hover { color: var(--rose-deep); }
+  @media (max-width: 700px) { .detail-hero img { height: 220px; } .detail-content { padding: 22px; } .detail-content h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mon Frigo Pastel</h1>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="frigo.html">Frigo</a>
+    <a href="recettes.html" class="active">Recettes</a>
+    <a href="courses.html">Courses</a>
+    <a href="apropos.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+<main class="container">
+  <a href="recettes.html" class="back-link">← Retour aux recettes</a>
+  <div id="detail"></div>
+</main>
+<footer>© 2025 Mon Frigo Pastel</footer>
+<script>
+const RECIPES = {
+  couscous: { name: "Couscous tunisien", img: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=1200", time: "1h30", servings: "6 personnes", ingredients: ["500g de semoule", "500g d'agneau", "3 carottes", "2 courgettes", "200g de pois chiches", "2 tomates", "1 c. à s. de harissa", "1 oignon", "Épices (coriandre, carvi, curcuma)", "Huile d'olive"], steps: ["Faites revenir l'agneau avec l'oignon et la harissa dans l'huile.", "Ajoutez les tomates coupées, les épices et couvrez d'eau. Laissez mijoter.", "Ajoutez les légumes coupés et les pois chiches. Cuisez 45 min.", "Pendant ce temps, hydratez et cuisez la semoule à la vapeur 3 fois.", "Servez la semoule avec la viande, les légumes et la sauce."] },
+  lablabi: { name: "Lablabi", img: "images/lablabi.jpg", time: "30 min", servings: "4 personnes", ingredients: ["500g de pois chiches cuits", "4 tranches de pain rassis", "2 gousses d'ail", "1 c. à c. de cumin", "1 c. à s. de harissa", "Huile d'olive", "Sel, citron", "1 œuf poché par personne", "Thon (optionnel)"], steps: ["Écrasez l'ail avec le sel, le cumin et la harissa.", "Faites chauffer les pois chiches dans leur bouillon.", "Déchirez le pain dans les bols.", "Versez les pois chiches chauds sur le pain.", "Ajoutez l'ail écrasé, l'huile d'olive et un filet de citron.", "Garnissez d'un œuf poché et de thon si souhaité."] },
+  brik: { name: "Brik à l'œuf", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1200", time: "20 min", servings: "4 briks", ingredients: ["4 feuilles de brick", "4 œufs", "1 boîte de thon", "1 bouquet de persil", "1 pomme de terre cuite", "Huile pour friture"], steps: ["Écrasez la pomme de terre cuite avec le thon et le persil.", "Étalez la garniture sur chaque feuille de brick.", "Cassez un œuf au centre.", "Repliez la feuille en triangle en soudant bien les bords.", "Faites frire 1 min de chaque côté dans l'huile chaude."] },
+  tajine: { name: "Tajine tunisien", img: "images/tajine.jpg", time: "45 min", servings: "6 personnes", ingredients: ["6 œufs", "400g de poulet", "100g de fromage râpé", "2 pommes de terre", "1 oignon", "Persil", "Épices"], steps: ["Faites cuire le poulet avec l'oignon et les épices.", "Faites cuire les pommes de terre et écrasez-les.", "Battez les œufs avec le fromage et le persil.", "Mélangez tout et versez dans un plat beurré.", "Enfournez 30 min à 180°C jusqu'à dorure."] },
+  chorba: { name: "Chorba", img: "images/chorba.jpg", time: "1h", servings: "6 personnes", ingredients: ["200g de frik", "300g d'agneau", "2 tomates", "1 oignon", "Coriandre", "1 c. à s. de harissa", "Huile"], steps: ["Faites revenir l'agneau avec l'oignon et la harissa.", "Ajoutez les tomates concassées et l'eau.", "Laissez mijoter 30 min.", "Ajoutez le frik et cuisez 20 min en remuant.", "Servez avec de la coriandre fraîche."] },
+  makroudh: { name: "Makroudh de Kairouan", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Makrouds_Kairouan.jpg/1200px-Makrouds_Kairouan.jpg", time: "1h", servings: "20 pièces", ingredients: ["500g de semoule", "250g de dattes", "150ml d'huile d'olive", "200g de miel", "1 c. à c. de cannelle", "Eau de fleur d'oranger"], steps: ["Mélangez la semoule, l'huile et l'eau de fleur d'oranger.", "Formez une pâte, laissez reposer 30 min.", "Étalez, garnissez de pâte de dattes.", "Roulez et coupez en losanges.", "Faites frire puis trempez dans le miel chaud."] },
+  mloukhia: { name: "Mloukhia", img: "images/mloukhia.jpg", time: "2h", servings: "6 personnes", ingredients: ["500g de mloukhia (corète en poudre)", "800g d'agneau", "4 gousses d'ail", "1 bouquet de coriandre", "100ml d'huile d'olive", "Sel"], steps: ["Dans une marmite, faites revenir la viande avec l'ail écrasé et l'huile d'olive.", "Ajoutez la poudre de mloukhia et mélangez vivement pour éviter les grumeaux.", "Versez 1 litre d'eau chaude, ajoutez la coriandre hachée et le sel.", "Laissez mijoter 1h30 à feu très doux en remuant régulièrement.", "Servez avec du pain tunisien, des olives et de la harissa."] },
+  'slata-mechouia': { name: "Slata Mechouia", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200", time: "30 min", servings: "4 personnes", ingredients: ["3 poivrons", "4 tomates", "1 oignon", "2 gousses d'ail", "1 boîte de thon", "2 œufs durs", "Huile d'olive"], steps: ["Grillez les poivrons, tomates et oignon.", "Pelez et hachez finement.", "Ajoutez l'ail écrasé, l'huile d'olive et le sel.", "Garnissez de thon et d'œufs durs.", "Servez froid avec du pain."] },
+  ojja: { name: "Ojja merguez", img: "images/ojja.jpg", time: "25 min", servings: "2 personnes", ingredients: ["4 œufs", "3 tomates", "4 merguez", "1 poivron", "2 gousses d'ail", "1 c. à s. de harissa", "Huile"], steps: ["Faites revenir l'ail, le poivron et la harissa.", "Ajoutez les tomates et les merguez coupées.", "Laissez mijoter 15 min.", "Cassez les œufs sur la sauce.", "Couvrez et cuisez 5 min jusqu'à ce que les œufs soient pris."] },
+  kamounia: { name: "Kamounia", img: "images/chorba.jpg", time: "1h", servings: "4 personnes", ingredients: ["500g de foie d'agneau", "300g de bœuf", "2 c. à c. de cumin", "3 gousses d'ail", "2 tomates", "1 c. à s. de harissa", "Coriandre", "Huile"], steps: ["Coupez le foie et le bœuf en dés.", "Faites revenir la viande avec l'ail et la harissa.", "Ajoutez les tomates, le cumin et l'eau.", "Laissez mijoter 40 min à feu moyen.", "Ajoutez la coriandre et servez chaud avec du pain."] },
+  'marqa-hlowa': { name: "Marqa Hlowa", img: "https://images.unsplash.com/photo-1574484284002-952d92456975?w=1200", time: "1h15", servings: "6 personnes", ingredients: ["800g d'agneau", "200g de pruneaux", "100g d'amandes", "2 c. à s. de miel", "1 c. à c. de cannelle", "2 oignons", "Huile"], steps: ["Faites revenir l'agneau avec l'oignon.", "Ajoutez la cannelle et couvrez d'eau.", "Laissez mijoter 45 min.", "Ajoutez les pruneaux et le miel, cuisez 15 min.", "Garnissez d'amandes grillées et servez."] },
+  chapati: { name: "Chapati tunisien", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1200", time: "30 min", servings: "4 personnes", ingredients: ["300g de farine", "2 c. à s. d'huile", "1 œuf", "1 boîte de thon", "1 c. à s. de harissa", "1 pomme de terre cuite", "Sel", "Eau"], steps: ["Mélangez la farine, l'huile, le sel et l'eau pour former une pâte.", "Laissez reposer 15 min.", "Étalez la pâte en petits cercles.", "Garnissez de thon, pomme de terre écrasée et harissa.", "Repliez et faites frire à la poêle jusqu'à dorure."] },
+  mhamsa: { name: "Mhamsa", img: "images/mhamsa.jpg", time: "1h", servings: "6 personnes", ingredients: ["500g de mhamsa (grosses pâtes)", "400g d'agneau", "200g de pois chiches", "2 tomates", "1 c. à s. de harissa", "1 oignon", "Huile"], steps: ["Faites revenir l'agneau avec l'oignon et la harissa.", "Ajoutez les tomates et les pois chiches.", "Couvrez d'eau et laissez mijoter 30 min.", "Ajoutez les mhamsa et cuisez 20 min.", "Servez bien chaud avec un filet d'huile d'olive."] },
+  'salade-tunisienne': { name: "Salade tunisienne", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200", time: "15 min", servings: "4 personnes", ingredients: ["4 tomates", "1 concombre", "1 oignon", "1 boîte de thon", "Olives", "1 citron", "Huile d'olive", "Sel, poivre"], steps: ["Coupez les tomates, le concombre et l'oignon en petits dés.", "Mélangez dans un saladier.", "Ajoutez le thon émietté et les olives.", "Assaisonnez avec le jus de citron, l'huile d'olive, sel et poivre.", "Servez frais."] },
+  chakchouka: { name: "Chakchouka", img: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=1200", time: "30 min", servings: "4 personnes", ingredients: ["3 poivrons", "4 tomates", "1 oignon", "4 œufs", "1 c. à s. de harissa", "2 gousses d'ail", "Huile d'olive"], steps: ["Faites revenir l'oignon et l'ail dans l'huile.", "Ajoutez les poivrons coupés et la harissa.", "Ajoutez les tomates concassées et laissez mijoter 15 min.", "Cassez les œufs sur les légumes.", "Couvrez et cuisez 5 min. Servez avec du pain."] }
+};
+function getIdFromUrl() { const urlParams = new URLSearchParams(window.location.search); let id = urlParams.get('id'); if (!id && window.location.href.includes('?id=')) { id = window.location.href.split('?id=')[1].split('&')[0]; } return id; }
+const id = getIdFromUrl(); const detail = document.getElementById('detail');
+if (id && RECIPES[id]) {
+  const r = RECIPES[id];
+  detail.innerHTML = `<div class="detail-hero"><img src="${r.img}" alt="${r.name}" onerror="this.src='https://images.unsplash.com/photo-1547592180-85f173990554?w=1200'"></div>
+    <div class="detail-content"><h1>${r.name}</h1><p class="detail-meta"><span>⏱ ${r.time}</span><span>👥 ${r.servings}</span></p>
+      <h4>🧺 Ingrédients</h4><ul>${r.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+      <h4>👩‍🍳 Préparation</h4><ol>${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+      <div class="detail-actions"><a href="courses.html" class="btn-primary">Ajouter aux courses 🛒</a><a href="recettes.html" class="btn-secondary">← Autres recettes</a></div>
+    </div>`;
+} else {
+  detail.innerHTML = `<div class="empty" style="padding: 60px 20px;"><h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 12px; color: var(--texte);">Oups, recette introuvable 🌸</h3><p style="margin-bottom: 24px;">Il semble que le lien soit cassé ou que la recette n'existe pas.</p><a href="recettes.html" class="btn-primary">Voir toutes les recettes</a></div>`;
+}
+</script>
+</body>
+</html>
+
+const id = getIdFromUrl();
+const detail = document.getElementById('detail');
+
+// Vérification : est-ce que la recette existe ?
+if (id && RECIPES[id]) {
+  const r = RECIPES[id];
+  detail.innerHTML = `
+    <div class="detail-hero">
+      <img src="${r.img}" alt="${r.name}" onerror="this.src='https://images.unsplash.com/photo-1547592180-85f173990554?w=1200'">
+    </div>
+    <div class="detail-content">
+      <h1>${r.name}</h1>
+      <p class="detail-meta"><span>⏱ ${r.time}</span><span>👥 ${r.servings}</span></p>
+      <h4>🧺 Ingrédients</h4>
+      <ul>${r.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+      <h4>👩‍🍳 Préparation</h4>
+      <ol>${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+      <div class="detail-actions">
+        <a href="courses.html" class="btn-primary">Ajouter aux courses 🛒</a>
+        <a href="recettes.html" class="btn-secondary">← Autres recettes</a>
+      </div>
+    </div>
+  `;
+} else {
+  // Si l'ID est introuvable ou absent
+  detail.innerHTML = `
+    <div class="empty" style="padding: 60px 20px;">
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 12px; color: var(--texte);">Oups, recette introuvable 🌸</h3>
+      <p style="margin-bottom: 24px;">Il semble que le lien soit cassé ou que la recette n'existe pas.</p>
+      <a href="recettes.html" class="btn-primary">Voir toutes les recettes</a>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

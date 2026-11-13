@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Détail de la recette</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Mon Frigo Pastel</h1>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="frigo.html">Frigo</a>
+    <a href="recettes.html" class="active">Recettes</a>
+    <a href="courses.html">Courses</a>
+    <a href="apropos.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="container">
+  <a href="recettes.html" style="color:var(--lavande-fonce);text-decoration:none;font-weight:600;">← Retour aux recettes</a>
+  <div id="detail" style="margin-top:16px;"></div>
+</main>
+
+<footer>© 2025 Mon Frigo Pastel</footer>
+
+<script>
+const RECIPES = {
+  couscous: {
+    name: "Couscous tunisien",
+    img: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=800",
+    time: "1h30", servings: "6 personnes",
+    ingredients: ["500g de semoule", "500g d'agneau", "3 carottes", "2 courgettes", "200g de pois chiches", "2 tomates", "1 c. à s. de harissa", "1 oignon", "Épices (coriandre, carvi, curcuma)", "Huile d'olive"],
+    steps: [
+      "Faites revenir l'agneau avec l'oignon et la harissa dans l'huile.",
+      "Ajoutez les tomates coupées, les épices et couvrez d'eau. Laissez mijoter.",
+      "Ajoutez les légumes coupés et les pois chiches. Cuisez 45 min.",
+      "Pendant ce temps, hydratez et cuisez la semoule à la vapeur 3 fois.",
+      "Servez la semoule avec la viande, les légumes et la sauce."
+    ]
+  },
+  lablabi: {
+    name: "Lablabi",
+    img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=800",
+    time: "30 min", servings: "4 personnes",
+    ingredients: ["500g de pois chiches cuits", "4 tranches de pain rassis", "2 gousses d'ail", "1 c. à c. de cumin", "1 c. à s. de harissa", "Huile d'olive", "Sel, citron"],
+    steps: [
+      "Écrasez l'ail avec le sel, le cumin et la harissa.",
+      "Faites chauffer les pois chiches dans leur bouillon.",
+      "Déchirez le pain dans les bols.",
+      "Versez les pois chiches chauds sur le pain.",
+      "Ajoutez l'ail écrasé, l'huile d'olive et un filet de citron."
+    ]
+  },
+  brik: {
+    name: "Brik à l'œuf",
+    img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800",
+    time: "20 min", servings: "4 briks",
+    ingredients: ["4 feuilles de brick", "4 œufs", "1 boîte de thon", "1 bouquet de persil", "1 pomme de terre cuite", "Huile pour friture"],
+    steps: [
+      "Écrasez la pomme de terre cuite avec le thon et le persil.",
+      "Étalez la garniture sur chaque feuille de brick.",
+      "Cassez un œuf au centre.",
+      "Repliez la feuille en triangle en soudant bien les bords.",
+      "Faites frire 1 min de chaque côté dans l'huile chaude."
+    ]
+  },
+  tajine: {
+    name: "Tajine tunisien",
+    img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=800",
+    time: "45 min", servings: "6 personnes",
+    ingredients: ["6 œufs", "400g de poulet", "100g de fromage râpé", "2 pommes de terre", "1 oignon", "Persil", "Épices"],
+    steps: [
+      "Faites cuire le poulet avec l'oignon et les épices.",
+      "Faites cuire les pommes de terre et écrasez-les.",
+      "Battez les œufs avec le fromage et le persil.",
+      "Mélangez tout et versez dans un plat beurré.",
+      "Enfournez 30 min à 180°C jusqu'à dorure."
+    ]
+  },
+  chorba: {
+    name: "Chorba frik",
+    img: "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=800",
+    time: "1h", servings: "6 personnes",
+    ingredients: ["200g de frik", "300g d'agneau", "2 tomates", "1 oignon", "Coriandre", "1 c. à s. de harissa", "Huile"],
+    steps: [
+      "Faites revenir l'agneau avec l'oignon et la harissa.",
+      "Ajoutez les tomates concassées et l'eau.",
+      "Laissez mijoter 30 min.",
+      "Ajoutez le frik et cuisez 20 min en remuant.",
+      "Servez avec de la coriandre fraîche."
+    ]
+  },
+  makroudh: {
+    name: "Makroudh",
+    img: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=800",
+    time: "1h", servings: "20 pièces",
+    ingredients: ["500g de semoule", "250g de dattes", "150ml d'huile d'olive", "200g de miel", "1 c. à c. de cannelle", "Eau de fleur d'oranger"],
+    steps: [
+      "Mélangez la semoule, l'huile et l'eau de fleur d'oranger.",
+      "Formez une pâte, laissez reposer 30 min.",
+      "Étalez, garnissez de pâte de dattes.",
+      "Roulez et coupez en losanges.",
+      "Faites frire puis trempez dans le miel chaud."
+    ]
+  },
+  mloukhia: {
+    name: "Mloukhia",
+    img: "https://images.unsplash.com/photo-1574484284002-952d92456975?w=800",
+    time: "2h", servings: "6 personnes",
+    ingredients: ["500g de mloukhia", "800g d'agneau", "4 gousses d'ail", "Coriandre", "Huile d'olive", "Sel"],
+    steps: [
+      "Faites revenir la viande avec l'ail et l'huile.",
+      "Ajoutez la mloukhia et mélangez.",
+      "Couvrez d'eau et laissez mijoter 1h30 à feu doux.",
+      "Remuez régulièrement pour éviter que ça attache.",
+      "Servez avec du pain et de la harissa."
+    ]
+  },
+  'slata-mechouia': {
+    name: "Slata Mechouia",
+    img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800",
+    time: "30

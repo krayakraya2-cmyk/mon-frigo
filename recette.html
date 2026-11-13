@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recettes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>❄️ Mon Frigo Magic</h1>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="frigo.html">Mon Frigo</a>
+    <a href="recettes.html" class="active">Recettes</a>
+    <a href="courses.html">Courses</a>
+  </nav>
+</header>
+
+<main class="container">
+  <h2>🍳 Recettes possibles</h2>
+  <p class="hint">Les recettes sont triées selon les ingrédients de votre frigo.</p>
+  <div id="recipesList" class="recipes"></div>
+</main>
+
+<footer>© 2025 Mon Frigo Magic</footer>
+
+<script>
+const RECIPES = [
+  { name: "Omelette au fromage", img: "https://images.unsplash.com/photo-1510693206972-df098062cb71?w=400", ingredients: ["oeuf", "fromage", "beurre"], time: "10 min", desc: "Battez les œufs, ajoutez le fromage râpé, cuisez à la poêle." },
+  { name: "Salade de tomates", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400", ingredients: ["tomate", "oignon", "huile"], time: "5 min", desc: "Coupez tomates et oignon, assaisonnez avec huile d'olive." },
+  { name: "Pâtes à la tomate", img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=400", ingredients: ["pates", "tomate", "ail", "oignon"], time: "20 min", desc: "Faites revenir ail et oignon, ajoutez tomates et mélangez aux pâtes." },
+  { name: "Croque-monsieur", img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400", ingredients: ["pain", "fromage", "jambon", "beurre"], time: "10 min", desc: "Garnissez le pain de jambon et fromage, faites dorer." },
+  { name: "Soupe de légumes", img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400", ingredients: ["carotte", "pomme de terre", "poireau", "oignon"], time: "30 min", desc: "Faites bouillir les légumes, mixez et servez chaud." },
+  { name: "Pancakes", img: "https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=400", ingredients: ["farine", "oeuf", "lait", "sucre"], time: "20 min", desc: "Mélangez farine, œufs, lait et sucre, cuisez à la poêle." },
+  { name: "Riz sauté aux œufs", img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400", ingredients: ["riz", "oeuf", "carotte", "petits pois"], time: "15 min", desc: "Faites sauter riz cuit, œufs et légumes." },
+  { name: "Smoothie banane", img: "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=400", ingredients: ["banane", "lait", "sucre"], time: "5 min", desc: "Mixez banane, lait et sucre, servez frais." }
+];
+
+const fridge = JSON.parse(localStorage.getItem('fm_fridge') || '[]');
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+const keys = fridge.map(f => f.key);
+
+function addMissing(items) {
+  let shop = JSON.parse(localStorage.getItem('fm_shop') || '[]');
+  items.forEach(item => {
+    if (!shop.some(s => norm(s.name) === norm(item))) shop.push({ name: item, done: false });
+  });
+  localStorage.setItem('fm_shop', JSON.stringify(shop));
+  alert('Ingrédients ajoutés à la liste de courses 🛒');
+}
+
+function render() {
+  const list = document.getElementById('recipesList');
+  if (!keys.length) {
+    list.innerHTML = '<p class="empty">Ajoutez d\'abord des ingrédients dans <a href="frigo.html">Mon Frigo</a>.</p>';
+    return;
+  }
+  const scored = RECIPES.map(r => {
+    const have = r.ingredients.filter(i => keys.includes(norm(i)));
+    const missing = r.ingredients.filter(i => !keys.includes(norm(i)));
+    return { ...r, have, missing, count: have.length };
+  }).filter(r => r.count > 0).sort((a, b) => b.count - a.count || a.missing.length - b.missing.length);
+
+  if (!scored.length) {
+    list.innerHTML = '<p class="empty">Aucune recette trouvée. Ajoutez plus d\'ingrédients.</p>';
+    return;
+  }
+
+  list.innerHTML = scored.map(r => {
+    const full = r.missing.length === 0;
+    return `<div class="recipe-card">
+      <img src="${r.img}" alt="${r.name}">
+      <div class="recipe-body">
+        <h3>${r.name}</h3>
+        <p class="meta">⏱ ${r.time} · ${full ? '<span class="badge ok">✓ Prêt</span>' : `<span class="badge warn">${r.count}/${r.ingredients.length}</span>`}</p>
+        <p>${r.desc}</p>
+        <p><strong>Vous avez :</strong> ${r.have.join(', ')}</p>
+        ${r.missing.length ? `<p class="missing"><strong>Il manque :</strong> ${r.missing.join(', ')}</p><button class="btn-secondary" onclick='addMissing(${JSON.stringify(r.missing).replace(/'/g, "&#39;")})'>+ Ajouter aux courses</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+render();
+</script>
+</body>
+</html>

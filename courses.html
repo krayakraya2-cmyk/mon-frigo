@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liste de courses</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Mon Frigo Pastel</h1>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="frigo.html">Frigo</a>
+    <a href="recettes.html">Recettes</a>
+    <a href="courses.html" class="active">Courses</a>
+    <a href="apropos.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="container">
+  <h2>🛒 Courses à choisir</h2>
+  <p class="hint">Cliquez sur un article pour l'ajouter à votre liste.</p>
+
+  <h3 style="color:var(--texte);margin:16px 0 10px;font-size:1.05rem;">Légumes</h3>
+  <div class="choice-grid" id="legumes"></div>
+
+  <h3 style="color:var(--texte);margin:16px 0 10px;font-size:1.05rem;">Viandes & poissons</h3>
+  <div class="choice-grid" id="viandes"></div>
+
+  <h3 style="color:var(--texte);margin:16px 0 10px;font-size:1.05rem;">Épicerie</h3>
+  <div class="choice-grid" id="epicerie"></div>
+
+  <h3 style="color:var(--texte);margin:16px 0 10px;font-size:1.05rem;">Frais & laitiers</h3>
+  <div class="choice-grid" id="frais"></div>
+
+  <h3 style="color:var(--texte);margin:24px 0 12px;font-size:1.2rem;">📝 Ma liste</h3>
+  <div class="add-row">
+    <input type="text" id="customInput" placeholder="Ajouter un article personnalisé..." autocomplete="off">
+    <button class="btn-primary" id="addCustom">Ajouter</button>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr><th>Article</th><th>Statut</th><th>Action</th></tr>
+    </thead>
+    <tbody id="shopBody"></tbody>
+  </table>
+  <p id="emptyMsg" class="empty">Votre liste est vide. Choisissez des articles ci-dessus 🌸</p>
+</main>
+
+<footer>© 2025 Mon Frigo Pastel</footer>
+
+<script>
+const CATEGORIES = {
+  legumes: ["Tomate", "Oignon", "Ail", "Carotte", "Courgette", "Poivron", "Pomme de terre", "Persil", "Coriandre", "Pois chiches"],
+  viandes: ["Agneau", "Poulet", "Merguez", "Thon", "Bœuf"],
+  epicerie: ["Semoule", "Riz", "Pâtes", "Frik", "Mloukhia", "Harissa", "Huile d'olive", "Farine", "Datte", "Miel", "Cumin", "Curcuma"],
+  frais: ["Œuf", "Fromage", "Lait", "Yaourt", "Beurre", "Feuille de brick"]
+};
+
+let shop = JSON.parse(localStorage.getItem('fm_shop') || '[]');
+
+function save() { localStorage.setItem('fm_shop', JSON.stringify(shop)); }
+function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
+function exists(name) { return shop.some(s => norm(s.name) === norm(name)); }
+
+function renderChoices() {
+  for (const [cat, items] of Object.entries(CATEGORIES)) {
+    document.getElementById(cat).innerHTML = items.map(item => {
+      const sel = exists(item) ? 'selected' : '';
+      return `<button class="choice-btn ${sel}" data-name="${item}" onclick="toggleChoice(this)">${item}${sel ? ' ✓' : ''}</button>`;
+    }).join('');
+  }
+}
+
+function toggleChoice(btn) {
+  const name = btn.dataset.name;
+  if (exists(name)) {
+    shop = shop.filter(s => norm(s.name) !== norm(name));
+  } else {
+    shop.push({ name, done: false });
+  }
+  save(); renderChoices(); renderList();
+}
+
+function addCustom() {
+  const input = document.getElementById('customInput');
+  const raw = input.value.trim();
+  if (!raw || exists(raw)) { input.value = ''; return; }
+  shop.push({ name: raw, done: false });
+  save(); input.value = ''; renderChoices(); renderList();
+}
+
+function toggle(i) { shop[i].done = !shop[i].done; save(); renderList(); }
+function removeItem(i) { shop.splice(i, 1); save(); renderChoices(); renderList(); }
+
+function renderList() {
+  const tbody = document.getElementById('shopBody');
+  const empty = document.getElementById('emptyMsg');
+  if (!shop.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = shop.map((s, i) => `
+    <tr class="${s.done ? 'done' : ''}">
+      <td>${s.name}</td>
+      <td>${s.done ? '✓ Acheté' : 'À acheter'}</td>
+      <td>
+        <button class="btn-secondary" onclick="toggle(${i})">${s.done ? '↩' : '✓'}</button>
+        <button class="del" onclick="removeItem(${i})">Supprimer</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('addCustom').onclick = addCustom;
+document.getElementById('customInput').onkeypress = e => { if (e.key === 'Enter') addCustom(); };
+
+renderChoices(); renderList();
+</script>
+</body>
+</html>

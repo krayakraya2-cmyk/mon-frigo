@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>À propos · Mon Frigo Pastel</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .about-hero { background: linear-gradient(135deg, var(--rose) 0%, var(--lavande) 55%, var(--menthe) 100%); border-radius: var(--rayon-lg); padding: 56px 32px; margin-bottom: 32px; text-align: center; box-shadow: var(--ombre); position: relative; overflow: hidden; }
+  .about-hero h2 { font-size: 2rem; margin-bottom: 14px; position: relative; z-index: 1; }
+  .about-hero p { color: var(--texte); font-size: 1.05rem; max-width: 620px; margin: 0 auto; position: relative; z-index: 1; }
+  .about-hero .emoji { font-size: 3rem; display: block; margin-bottom: 12px; position: relative; z-index: 1; }
+  .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 36px; }
+  .value-card { background: var(--blanc); border-radius: var(--rayon); padding: 26px 22px; box-shadow: var(--ombre-sm); text-align: center; transition: var(--transition); border: 2px solid transparent; }
+  .value-card:hover { transform: translateY(-5px); box-shadow: var(--ombre); border-color: var(--menthe); }
+  .value-card .icon { font-size: 2.4rem; display: block; margin-bottom: 12px; }
+  .value-card h3 { font-size: 1.05rem; margin-bottom: 8px; color: var(--texte); }
+  .value-card p { color: var(--texte-doux); font-size: 0.88rem; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 36px; }
+  .step { background: var(--blanc); border-radius: var(--rayon); padding: 24px; box-shadow: var(--ombre-sm); border-left: 5px solid var(--lavande-fonce); }
+  .step .num { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--rose-fonce) 0%, var(--lavande-fonce) 100%); color: white; font-weight: 800; font-size: 1.05rem; margin-bottom: 14px; }
+  .step h3 { font-size: 1rem; margin-bottom: 6px; color: var(--texte); }
+  .step p { color: var(--texte-doux); font-size: 0.88rem; }
+  .step a { color: var(--lavande-fonce); font-weight: 700; text-decoration: none; }
+  .section-title { font-size: 1.25rem; color: var(--texte); margin: 0 0 18px; padding-bottom: 10px; border-bottom: 2px solid var(--rose-pale); font-weight: 800; }
+  .quote-box { background: linear-gradient(135deg, var(--menthe-pale) 0%, var(--lavande-pale) 100%); border-radius: var(--rayon); padding: 28px 26px; margin-bottom: 24px; text-align: center; box-shadow: var(--ombre-sm); border-left: 5px solid var(--menthe-fonce); font-style: italic; color: var(--texte); font-size: 1rem; }
+  .quote-box .author { display: block; margin-top: 12px; font-style: normal; font-weight: 700; font-size: 0.85rem; color: var(--texte-doux); }
+  .dish-name { font-weight: 700; color: var(--texte); }
+  .dish-origin { color: var(--lavande-fonce); font-weight: 600; font-size: 0.85rem; }
+  .dish-tag { display: inline-block; padding: 3px 11px; border-radius: var(--rayon-xl); font-size: 0.75rem; font-weight: 700; background: var(--menthe-pale); color: var(--texte); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mon Frigo Pastel</h1>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="frigo.html">Frigo</a>
+    <a href="recettes.html">Recettes</a>
+    <a href="courses.html">Courses</a>
+    <a href="apropos.html" class="active">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+<main class="container">
+  <section class="about-hero">
+    <span class="emoji">🌸</span>
+    <h2>À propos de Mon Frigo Pastel</h2>
+    <p>Une petite appli douce et colorée pour cuisiner tunisien avec ce que vous avez déjà dans le frigo.</p>
+  </section>
+  <div class="info-box"><strong>Notre mission :</strong> valoriser la cuisine tunisienne, réduire le gaspillage alimentaire, et vous faire gagner du temps en cuisine — tout ça dans un design apaisant et pastel.</div>
+  <h3 class="section-title">💚 Nos valeurs</h3>
+  <div class="values-grid">
+    <div class="value-card"><span class="icon">🇹🇳</span><h3>Tradition</h3><p>Des recettes authentiques transmises de génération en génération.</p></div>
+    <div class="value-card"><span class="icon">🌿</span><h3>Anti-gaspi</h3><p>Cuisinez avec ce que vous avez déjà, sans rien jeter.</p></div>
+    <div class="value-card"><span class="icon">⏱️</span><h3>Simplicité</h3><p>Une interface claire, rapide et agréable à utiliser.</p></div>
+    <div class="value-card"><span class="icon">🎨</span><h3>Douceur</h3><p>Un design pastel pensé pour être reposant à l'œil.</p></div>
+  </div>
+  <h3 class="section-title">✨ Comment ça marche ?</h3>
+  <div class="steps">
+    <div class="step"><span class="num">1</span><h3>Remplissez votre frigo</h3><p>Ajoutez vos ingrédients dans <a href="frigo.html">Mon Frigo</a>.</p></div>
+    <div class="step"><span class="num">2</span><h3>Choisissez vos produits</h3><p>Cliquez sur les produits pour les sélectionner.</p></div>
+    <div class="step"><span class="num">3</span><h3>Découvrez les recettes</h3><p>Consultez les plats possibles dans <a href="recettes.html">Recettes</a>.</p></div>
+    <div class="step"><span class="num">4</span><h3>Faites vos courses</h3><p>Ajoutez les manquants dans <a href="courses.html">Courses</a>.</p></div>
+  </div>
+  <h3 class="section-title">🍽️ Les plats stars de la Tunisie</h3>
+  <table class="data-table">
+    <thead><tr><th>Plat</th><th>Origine</th><th>Type</th><th>Temps</th></tr></thead>
+    <tbody>
+      <tr><td class="dish-name">Couscous</td><td class="dish-origin">National</td><td><span class="dish-tag">Plat principal</span></td><td>1h30</td></tr>
+      <tr><td class="dish-name">Lablabi</td><td class="dish-origin">Tunis</td><td><span class="dish-tag">Soupe</span></td><td>30 min</td></tr>
+      <tr><td class="dish-name">Brik à l'œuf</td><td class="dish-origin">National</td><td><span class="dish-tag">Entrée</span></td><td>20 min</td></tr>
+      <tr><td class="dish-name">Tajine tunisien</td><td class="dish-origin">National</td><td><span class="dish-tag">Plat au four</span></td><td>45 min</td></tr>
+      <tr><td class="dish-name">Chorba</td><td class="dish-origin">National</td><td><span class="dish-tag">Soupe</span></td><td>1h</td></tr>
+      <tr><td class="dish-name">Makroudh</td><td class="dish-origin">Kairouan</td><td><span class="dish-tag">Dessert</span></td><td>1h</td></tr>
+      <tr><td class="dish-name">Mloukhia</td><td class="dish-origin">National</td><td><span class="dish-tag">Ragoût</span></td><td>2h</td></tr>
+      <tr><td class="dish-name">Slata Mechouia</td><td class="dish-origin">National</td><td><span class="dish-tag">Entrée</span></td><td>30 min</td></tr>
+      <tr><td class="dish-name">Ojja merguez</td><td class="dish-origin">National</td><td><span class="dish-tag">Plat principal</span></td><td>25 min</td></tr>
+    </tbody>
+  </table>
+  <div class="quote-box">« La cuisine tunisienne, c'est de l'amour, des épices et du partage. »<span class="author">— Un grand-mère de Sousse 🌸</span></div>
+  <div class="info-box" style="background: linear-gradient(135deg, var(--menthe-pale) 0%, var(--lavande-pale) 100%); border-left-color: var(--menthe-fonce);"><strong>🔒 Vie privée :</strong> toutes vos données (frigo, courses, sélection) restent <strong>dans votre navigateur</strong>. Aucune information n'est envoyée sur Internet.</div>
+</main>
+<footer>© 2025 Mon Frigo Pastel · Fait avec 🌸 à Tunis</footer>
+</body>
+</html>
